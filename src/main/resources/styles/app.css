@@ -1,0 +1,90 @@
+/* app.css - global app theme (blue-ish) */
+.root {
+    -fx-font-family: "Segoe UI", "Arial", sans-serif;
+    -fx-background-color: linear-gradient(to bottom, #f7fbff, #eaf3ff);
+}
+
+/* Title */
+.label-app-title {
+    -fx-font-size: 26px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #0b3d91;
+}
+
+/* Card container */
+.login-card {
+    -fx-background-color: white;
+    -fx-padding: 20;
+    -fx-background-radius: 10;
+    -fx-effect: dropshadow(gaussian, rgba(10, 30, 80, 0.12), 12, 0.2, 0, 4);
+}
+
+/* Inputs (base) */
+.input-field {
+    -fx-pref-width: 320px;
+    -fx-padding: 8 10 8 10;
+    -fx-background-radius: 6;
+    -fx-border-radius: 6;
+    -fx-border-color: #d6e6ff;
+    -fx-border-width: 1;
+}
+
+/* Input focus */
+.input-field:focused {
+    -fx-border-color: #4a90e2;
+    -fx-border-width: 2;
+}
+
+/* Error state for inputs */
+.input-error {
+    -fx-border-color: #e53935 !important;
+    -fx-border-width: 2 !important;
+}
+
+/* Helper / small text */
+.helper {
+    -fx-text-fill: #777777;
+    -fx-font-size: 11px;
+}
+
+.helper-error {
+    -fx-text-fill: #e53935;
+    -fx-font-weight: bold;
+}
+
+/* Primary button */
+.btn-primary, .button-primary {
+    -fx-background-color: #1e88e5;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-background-radius: 8;
+    -fx-padding: 8 18 8 18;
+    -fx-font-size: 14px;
+}
+
+/* Primary hover */
+.btn-primary:hover, .button-primary:hover {
+    -fx-background-color: #1976d2;
+}
+
+/* Secondary button style */
+.button-secondary {
+    -fx-background-color: white;
+    -fx-border-color: #2196F3;
+    -fx-border-radius: 8;
+    -fx-text-fill: #2196F3;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-padding: 8 18 8 18;
+}
+
+.button-secondary:hover {
+    -fx-background-color: #E3F2FD;
+}
+
+/* Reset link */
+.reset-link {
+    -fx-text-fill: #1e88e5;
+    -fx-underline: true;
+    -fx-cursor: hand;
+}
