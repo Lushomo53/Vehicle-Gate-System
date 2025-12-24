@@ -11,16 +11,22 @@ import javafx.stage.Stage;
 
 import java.util.Objects;
 
-public class InitialScreen {
-    public static void show(Stage stage) {
+public class InitialScreen implements Screen {
+    private Parent root;
+
+    public void show(Stage stage) {
         stage.getIcons().add(
                 new Image(Objects.requireNonNull(InitialScreen.class.getResourceAsStream("/images/gate_system_logo.jpeg")))
         );
+        root = build();
         SceneManager.init(stage);
-        SceneManager.setScene(build(), "Welcome");
+        SceneManager.setScene(root, "Welcome");
     }
 
-    private static Parent build() {
+    @Override
+    public Parent getRoot() { return root; }
+
+    private Parent build() {
         ImageView logoView = new ImageView();
 
         try {
@@ -64,8 +70,8 @@ public class InitialScreen {
 
         root.getChildren().addAll(logoView, appTitle, buttons);
 
-        loginBtn.setOnAction(e -> LoginView.show((Stage) root.getScene().getWindow()));
-        signUpBtn.setOnAction(e -> SignUpView.show((Stage) root.getScene().getWindow()));
+        loginBtn.setOnAction(e -> new LoginView().show((Stage) root.getScene().getWindow()));
+        signUpBtn.setOnAction(e -> new SignUpView().show((Stage) root.getScene().getWindow()));
 
         return root;
     }
@@ -77,7 +83,7 @@ public class InitialScreen {
     public static class TestApp extends Application {
         @Override
         public void start(Stage primaryStage) {
-            InitialScreen.show(primaryStage);
+            new InitialScreen().show(primaryStage);
         }
     }
 }

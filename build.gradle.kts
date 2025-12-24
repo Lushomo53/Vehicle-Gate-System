@@ -1,6 +1,7 @@
 plugins {
     application
     java
+    id("org.openjfx.javafxplugin") version "0.0.14"
 }
 
 group = "org.example"
@@ -18,41 +19,32 @@ repositories {
     mavenCentral()
 }
 
-val osName = System.getProperty("os.name").lowercase()
-val javafxPlatform = when {
-    osName.contains("win") -> "win"
-    osName.contains("mac") -> "mac"
-    else -> "linux"
-}
-
 java {
     toolchain {
         languageVersion.set(JavaLanguageVersion.of(javaVersion))
     }
 }
 
-dependencies {
-    implementation("org.openjfx:javafx-base:$javafxVersion:$javafxPlatform")
-    implementation("org.openjfx:javafx-controls:$javafxVersion:$javafxPlatform")
-    implementation("org.openjfx:javafx-fxml:$javafxVersion:$javafxPlatform")
-    implementation("org.openjfx:javafx-graphics:$javafxVersion:$javafxPlatform")
+javafx {
+    version = javafxVersion
+    modules = listOf("javafx.controls", "javafx.fxml", "javafx.graphics")
+}
 
+dependencies {
+    // JavaFX (handled by plugin)
+    // No need for manual javafx dependencies anymore
+
+    // MySQL
     implementation("com.mysql:mysql-connector-j:$mysqlVersion")
 
+    // Jakarta Mail
+    implementation("com.sun.mail:jakarta.mail:2.0.2")
+    implementation("com.sun.activation:jakarta.activation:2.0.1")
+
+    // JUnit
     testImplementation(platform("org.junit:junit-bom:5.10.0"))
     testImplementation("org.junit.jupiter:junit-jupiter")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
-}
-
-tasks.withType<JavaExec>().configureEach {
-    val javafxJarsList = classpath.filter { it.name.contains("javafx") }.toList()
-    if (javafxJarsList.isNotEmpty()) {
-        val modulePath = javafxJarsList.joinToString(separator = File.pathSeparator) { it.absolutePath }
-        jvmArgs = listOf(
-            "--module-path", modulePath,
-            "--add-modules", "javafx.controls,javafx.fxml"
-        )
-    }
 }
 
 tasks.test {

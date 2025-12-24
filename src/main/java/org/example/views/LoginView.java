@@ -1,22 +1,38 @@
 package org.example.views;
 
 import javafx.application.Application;
+import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import javafx.geometry.*;
 import javafx.scene.*;
 import javafx.scene.control.*;
 import javafx.scene.image.*;
 import javafx.scene.layout.*;
+import org.example.controller.LoginStatus;
+import org.example.controller.UserController;
+import org.example.controller.service.SessionManager;
 
 import java.util.Objects;
 
-public class LoginView {
-    public static void show(Stage stage) {
+public class LoginView implements Screen {
+    private Parent root;
+
+    @Override
+    public Parent getRoot() { return root; }
+
+    public void show(Stage stage) {
+        root = build();
         SceneManager.init(stage);
-        SceneManager.setScene(build(), "Login - Vehicle Gate System");
+        SceneManager.setScene(root, "Login - Vehicle Gate System");
     }
 
-    public static Parent build() {
+    public Parent build() {
+        UserController controller = new UserController();
+
+        Label title = new Label("Login");
+        title.setAlignment(Pos.CENTER);
+        title.getStyleClass().add("label-app-title");
+
         ImageView logoView = new ImageView();
 
         try {
@@ -30,16 +46,22 @@ public class LoginView {
             System.err.println("Image not found");
         }
 
+        Label usernamePrompt = new Label("Username");
+        usernamePrompt.setFont(new Font(12));
+
         TextField usernameField = new TextField();
-        usernameField.setPromptText("Username");
+        usernameField.setPromptText("Enter Your Username");
         usernameField.getStyleClass().add("input-field");
 
+        Label passwordPrompt = new Label("Password");
+        passwordPrompt.setFont(new Font(12));
+
         PasswordField passwordField = new PasswordField();
-        passwordField.setPromptText("Password");
+        passwordField.setPromptText("Enter Password");
         passwordField.getStyleClass().add("input-field");
 
         TextField passwordPlain = new TextField();
-        passwordPlain.setVisible(false);
+        passwordPlain.setPromptText("Enter Password");
         passwordPlain.getStyleClass().add("input-field");
 
         CheckBox showPassword = new CheckBox("Show");
@@ -73,7 +95,7 @@ public class LoginView {
 
         VBox form = new VBox(8);
         form.setAlignment(Pos.CENTER_LEFT);
-        form.getChildren().addAll(usernameField, passwordField, passwordPlain);
+        form.getChildren().addAll(usernamePrompt, usernameField, passwordPrompt, passwordField, passwordPlain);
 
         form.setFillWidth(false);
 
@@ -92,6 +114,7 @@ public class LoginView {
 
         VBox cardContent = new VBox(
                 8,
+                title,
                 form,
                 showRow,
                 errorLabel,
@@ -116,6 +139,12 @@ public class LoginView {
 
         root.getStyleClass().add("v-spacing");
 
+        resetLink.setOnAction(_-> {
+            ResetPasswordView resetPasswordView = new ResetPasswordView();
+            SessionManager.currentSession.switchScreen(resetPasswordView);
+            resetPasswordView.show((Stage) root.getScene().getWindow());
+        });
+
         loginBtn.setOnAction(e -> {
             usernameField.getStyleClass().remove("input-error");
             passwordField.getStyleClass().remove("input-error");
@@ -125,38 +154,36 @@ public class LoginView {
             String username = usernameField.getText() == null ? "" : usernameField.getText().trim();
             String password = passwordField.isVisible() ? passwordField.getText() : passwordPlain.getText();
 
-            if (username.isEmpty() || password.isEmpty()) {
-                if (username.isEmpty()) usernameField.getStyleClass().add("input-error");
+            LoginStatus status = controller.authenticateUser(username, password);
 
-                if (password.isEmpty()) {
+            switch (status) {
+                case LOGIN_SUCCESSFUL -> {
+                    DashboardView dashboardView = new DashboardView();
+                    SessionManager.currentSession.switchScreen(dashboardView);
+                    dashboardView.show((Stage) root.getScene().getWindow());
+                }
+                case EMPTY_USERNAME -> {
+                    errorLabel.setText("Please enter your username!");
+                    errorLabel.setVisible(true);
+                    usernameField.getStyleClass().add("input-error");
+                }
+
+                case EMPTY_PASSWORD -> {
+                    errorLabel.setText("Please enter your password!");
+                    errorLabel.setVisible(true);
                     passwordField.getStyleClass().add("input-error");
                     passwordPlain.getStyleClass().add("input-error");
                 }
 
-                errorLabel.setText("Please don't leave any field empty");
-                errorLabel.setVisible(true);
-
-                if (username.isEmpty()) usernameField.requestFocus();
-                else {
-                    if (passwordField.isVisible()) passwordField.requestFocus();
-                    else passwordPlain.requestFocus();
+                case INVALID_PASSWORD -> {
+                    errorLabel.setText("Invalid username or password");
+                    errorLabel.setVisible(true);
                 }
-                return;
-            }
 
-            boolean valid = username.equalsIgnoreCase("admin") && password.equals("admin");
-
-            if (valid) {
-                Alert a = new Alert(Alert.AlertType.INFORMATION, "Login Successful (demo).", ButtonType.OK);
-                a.setHeaderText(null);
-                a.showAndWait();
-            } else {
-                passwordField.getStyleClass().add("input-error");
-                usernameField.getStyleClass().add("input-error");
-                passwordPlain.getStyleClass().add("input-error");
-                errorLabel.setText("Invalid username or password");
-                errorLabel.setVisible(true);
-                passwordField.requestFocus();
+                case USER_NOT_FOUND -> {
+                    errorLabel.setText(String.format("User with username (or email) %s not found", username));
+                    errorLabel.setVisible(true);
+                }
             }
         });
 
@@ -174,7 +201,7 @@ public class LoginView {
     public static class TestApp extends Application {
         @Override
         public void start(Stage stage) {
-            LoginView.show(stage);
+            new LoginView().show(stage);
         }
     }
 

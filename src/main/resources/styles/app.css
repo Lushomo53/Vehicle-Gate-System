@@ -1,47 +1,83 @@
-/* app.css - global app theme (blue-ish) */
+/* =========================================
+   GLOBAL STYLES
+   ========================================= */
 .root {
     -fx-font-family: "Segoe UI", "Arial", sans-serif;
     -fx-background-color: linear-gradient(to bottom, #f7fbff, #eaf3ff);
 }
 
-/* Title */
+/* =========================================
+   LABELS / TITLES
+   ========================================= */
 .label-app-title {
     -fx-font-size: 26px;
     -fx-font-weight: bold;
     -fx-text-fill: #0b3d91;
 }
 
-/* Card container */
-.login-card {
+/* =========================================
+   CARDS / PANELS
+   ========================================= */
+.login-card,
+.filter-pane,
+.action-pane {
     -fx-background-color: white;
-    -fx-padding: 20;
-    -fx-background-radius: 10;
-    -fx-effect: dropshadow(gaussian, rgba(10, 30, 80, 0.12), 12, 0.2, 0, 4);
+    -fx-background-radius: 12;
+    -fx-padding: 16;
+    -fx-spacing: 12;
+    -fx-border-radius: 12;
+    -fx-border-color: #e5e7eb;
+    -fx-effect: dropshadow(gaussian, rgba(10,30,80,0.12), 12, 0.2, 0, 6);
 }
 
-/* Inputs (base) */
-.input-field {
-    -fx-pref-width: 320px;
-    -fx-padding: 8 10 8 10;
-    -fx-background-radius: 6;
-    -fx-border-radius: 6;
+/* =========================================
+   INPUTS
+   ========================================= */
+.input-field,
+.filter-pane .text-field,
+.filter-pane .combo-box,
+.filter-pane .date-picker {
+    -fx-pref-height: 36px;
+    -fx-background-radius: 8;
+    -fx-border-radius: 8;
     -fx-border-color: #d6e6ff;
     -fx-border-width: 1;
+    -fx-padding: 6 12;
+    -fx-font-size: 13px;
+    -fx-background-color: #f9fafb;
 }
 
-/* Input focus */
-.input-field:focused {
+.input-field:focused,
+.filter-pane .text-field:focused,
+.filter-pane .combo-box:focused,
+.filter-pane .date-picker:focused {
     -fx-border-color: #4a90e2;
     -fx-border-width: 2;
 }
 
-/* Error state for inputs */
 .input-error {
     -fx-border-color: #e53935 !important;
     -fx-border-width: 2 !important;
 }
 
-/* Helper / small text */
+.otp-field {
+    -fx-pref-width: 48;
+    -fx-pref-height: 56;
+    -fx-font-size: 20px;
+    -fx-alignment: center;
+    -fx-background-radius: 8;
+    -fx-border-radius: 8;
+    -fx-border-color: #c7d2fe;
+}
+
+.otp-field:focused {
+    -fx-border-width: 2;
+    -fx-border-color: #2563eb;
+}
+
+/* =========================================
+   HELP TEXT
+   ========================================= */
 .helper {
     -fx-text-fill: #777777;
     -fx-font-size: 11px;
@@ -52,37 +88,229 @@
     -fx-font-weight: bold;
 }
 
-/* Primary button */
-.btn-primary, .button-primary {
+/* =========================================
+   BUTTONS
+   ========================================= */
+.button-primary,
+.btn-primary,
+.filter-button {
     -fx-background-color: #1e88e5;
     -fx-text-fill: white;
     -fx-font-weight: bold;
     -fx-background-radius: 8;
-    -fx-padding: 8 18 8 18;
+    -fx-padding: 10 18;
     -fx-font-size: 14px;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 4, 0.2, 0, 2);
 }
 
-/* Primary hover */
-.btn-primary:hover, .button-primary:hover {
+.button-primary:hover,
+.btn-primary:hover,
+.filter-button:hover {
     -fx-background-color: #1976d2;
 }
 
-/* Secondary button style */
 .button-secondary {
     -fx-background-color: white;
-    -fx-border-color: #2196F3;
+    -fx-border-color: #1e88e5;
     -fx-border-radius: 8;
-    -fx-text-fill: #2196F3;
-    -fx-font-size: 14px;
+    -fx-text-fill: #1e88e5;
     -fx-font-weight: bold;
-    -fx-padding: 8 18 8 18;
+    -fx-padding: 10 18;
 }
 
 .button-secondary:hover {
-    -fx-background-color: #E3F2FD;
+    -fx-background-color: #e3f2fd;
 }
 
-/* Reset link */
+.action-button {
+    -fx-pref-height: 40;
+    -fx-background-radius: 8;
+    -fx-font-weight: bold;
+    -fx-padding: 0 16;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.05), 3, 0.2, 0, 2);
+}
+
+/* Shades for role-specific buttons */
+.admin-action {
+    -fx-background-color: #1565c0;
+    -fx-text-fill: white;
+}
+
+.admin-action:hover {
+    -fx-background-color: #0d47a1;
+}
+
+.guard-action {
+    -fx-background-color: #0288d1;
+    -fx-text-fill: white;
+}
+
+.guard-action:hover {
+    -fx-background-color: #0277bd;
+}
+
+/* =========================================
+   MENU BAR
+   ========================================= */
+.menu-bar {
+    -fx-background-color: #1f2933;
+}
+
+.menu-bar .label {
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+}
+
+.menu-button {
+    -fx-background-color: transparent;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-padding: 6 14;
+    -fx-background-radius: 6;
+}
+
+.menu-button:hover,
+.menu-button:showing {
+    -fx-background-color: #1e5fbf;
+}
+
+/* Dropdown panel */
+.context-menu {
+    -fx-background-color: #0b3d91;
+    -fx-border-color: #1e5fbf;
+    -fx-border-width: 1;
+    -fx-background-radius: 6;
+}
+
+.context-menu .menu-item {
+    -fx-background-color: transparent;
+    -fx-text-fill: white;
+    -fx-padding: 8 14;
+}
+
+.context-menu .menu-item:hover {
+    -fx-background-color: #1976d2;
+}
+
+/* =========================================
+   TABLE VIEW
+   ========================================= */
+.table-view {
+    -fx-background-color: white;
+    -fx-border-color: #e5e7eb;
+    -fx-border-radius: 8;
+    -fx-background-radius: 8;
+    -fx-padding: 4;
+}
+
+.table-view .column-header-background {
+    -fx-background-color: #f1f5f9;
+    -fx-border-radius: 8 8 0 0;
+}
+
+.table-view .column-header .label {
+    -fx-font-weight: bold;
+    -fx-text-fill: #111827;
+}
+
+.table-view .table-row-cell {
+    -fx-background-color: white;
+}
+
+.table-view .table-row-cell:odd {
+    -fx-background-color: #f9fafb;
+}
+
+.table-view .table-row-cell:selected {
+    -fx-background-color: #dbeafe;
+}
+
+.table-view .table-cell {
+    -fx-padding: 8 12;
+    -fx-alignment: CENTER-LEFT;
+}
+
+/* =========================================
+   FILTER PANE
+   ========================================= */
+.filter-pane {
+    -fx-background-color: white;
+    -fx-padding: 16;
+    -fx-spacing: 12;
+    -fx-border-color: #e5e7eb;
+    -fx-border-radius: 10;
+    -fx-background-radius: 10;
+}
+
+.filter-pane .text-field,
+.filter-pane .combo-box,
+.filter-pane .date-picker {
+    -fx-pref-height: 36px;
+    -fx-background-radius: 8;
+    -fx-border-radius: 8;
+    -fx-background-color: #f9fafb;
+    -fx-font-size: 13px;
+}
+
+/* ComboBox dropdown styling */
+.filter-pane .combo-box .list-view {
+    -fx-background-color: white;
+    -fx-border-color: #d6e6ff;
+    -fx-border-radius: 8;
+}
+
+.filter-pane .combo-box .list-cell {
+    -fx-padding: 6 12;
+}
+
+.filter-pane .combo-box .list-cell:hover {
+    -fx-background-color: #1976d2;
+}
+
+/* DatePicker popup styling */
+.filter-pane .date-picker .calendar-popup {
+    -fx-background-color: white;
+    -fx-border-color: #d6e6ff;
+    -fx-border-radius: 8;
+}
+
+.filter-pane .date-picker .day-cell:hover {
+    -fx-background-color: #eaf3ff;
+}
+
+/* =========================================
+   COMBO BOX (ORDINARY)
+   ========================================= */
+
+.ordinary-combo-box {
+    -fx-pref-height: 22px;
+    -fx-pref-width: 200px;
+    -fx-background-radius: 6;
+    -fx-border-radius: 6;
+    -fx-background-color: #f9fafb;
+    -fx-font-size: 12px;
+}
+
+.ordinary-combo-box .list-view {
+    -fx-background-color: white;
+    -fx-border-color: #d6e6ff;
+    -fx-border-radius: 8;
+}
+
+.ordinary-combo-box .list-cell {
+    -fx-padding: 6 12;
+}
+
+.ordinary-combo-box .list-cell:hover {
+    -fx-background-color: #1976d2;
+}
+
+
+/* =========================================
+   LINKS
+   ========================================= */
 .reset-link {
     -fx-text-fill: #1e88e5;
     -fx-underline: true;
