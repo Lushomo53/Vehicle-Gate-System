@@ -2,6 +2,7 @@ package org.example.views.components;
 
 import javafx.scene.control.TextField;
 import javafx.scene.control.TextFormatter;
+import javafx.scene.control.TextInputControl;
 import javafx.scene.input.Clipboard;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
@@ -95,6 +96,8 @@ public class OTPInputField extends HBox {
         });
         return otp.toString();
     }
+
+    public void clear() { fields.forEach(TextInputControl::clear); }
 
     public BooleanProperty filledProperty() { return filled; }
 

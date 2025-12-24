@@ -99,7 +99,6 @@ public class CreatePasswordView implements Screen {
             switch (status) {
                 case STRONG_PASSWORD -> {
                     SessionManager.currentSession.getCurrentUser().setPassword(PasswordUtil.hashPassword(password));
-                    controller.registerUser(SessionManager.currentSession.getCurrentUser());
                     OTPVerificationView otpVV = new OTPVerificationView();
                     SessionManager.currentSession.switchScreen(otpVV);
                     otpVV.show((Stage) root.getScene().getWindow());

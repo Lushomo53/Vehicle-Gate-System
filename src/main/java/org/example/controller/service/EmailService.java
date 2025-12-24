@@ -41,7 +41,7 @@ public class EmailService {
         Session session = createSession();
         session.setDebug(true);
 
-        Message message = new MimeMessage(session);
+        MimeMessage message = new MimeMessage(session);
         message.setFrom(new InternetAddress(username));
         message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(recipient));
         message.setSubject(subject);

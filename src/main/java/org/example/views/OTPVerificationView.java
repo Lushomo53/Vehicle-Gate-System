@@ -1,5 +1,7 @@
 package org.example.views;
 
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -7,10 +9,18 @@ import javafx.scene.Parent;
 import javafx.stage.Stage;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
+import javafx.util.Duration;
+import org.example.controller.VerificationController;
+import org.example.controller.VerificationStatus;
+import org.example.controller.service.EmailController;
+import org.example.controller.service.SessionManager;
 import org.example.views.components.OTPInputField;
+
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class OTPVerificationView implements Screen {
     private Parent root;
+    private static final int RESEND_DELAY = 60;
 
     public void show(Stage stage) {
         root = build();
@@ -22,23 +32,55 @@ public class OTPVerificationView implements Screen {
     public Parent getRoot() { return root; }
 
     public Parent build() {
+        EmailController emailController = new EmailController();
+        emailController.sendOTpEmail();
+
+        VerificationController verificationController = new VerificationController();
+
         Label title = new Label("Verification");
         title.getStyleClass().add("label-app-title");
 
-        Label info = new Label("Enter the code sent to: username@domain.com");
+        Label info = new Label("Enter the code sent to: " + SessionManager.currentSession.getCurrentUser().getEmail());
 
-        OTPInputField otpField = new OTPInputField(5);
+        OTPInputField otpField = new OTPInputField(6);
         otpField.style("otp-field");
         otpField.setAlignment(Pos.CENTER);
 
         Button confirmBtn = new Button("Confirm");
         confirmBtn.getStyleClass().add("button-primary");
 
+        Hyperlink resendLink = new Hyperlink("Resend Code");
+        resendLink.getStyleClass().add("reset-link");
+        resendLink.setDisable(true);
+
+        Label timerLabel = new Label();
+        timerLabel.setText("Resend in " + RESEND_DELAY + " seconds");
+        timerLabel.getStyleClass().add("timer-label");
+
+        Timeline timeline = new Timeline();
+        timeline.setCycleCount(RESEND_DELAY);
+        AtomicInteger timeLeft = new AtomicInteger(RESEND_DELAY);
+        KeyFrame keyFrame = new KeyFrame(Duration.seconds(1), event -> {
+            timeLeft.set(timeLeft.get() - 1);
+            timerLabel.setText("Resend in " + timeLeft.get() + " seconds");
+
+            if (timeLeft.get() <= 0) {
+                timerLabel.setText("");
+                resendLink.setDisable(false);
+            }
+        });
+        timeline.getKeyFrames().add(keyFrame);
+        timeline.play();
+
         otpField.filledProperty().addListener(((observable, oldValue, newValue) -> {
             if (newValue) confirmBtn.fire();
         }));
 
-        VBox card = new VBox(10, title, info, otpField, confirmBtn);
+        Label errorLabel = new Label();
+        errorLabel.setVisible(false);
+        errorLabel.getStyleClass().add("helper-error");
+
+        VBox card = new VBox(10, title, info, otpField, confirmBtn, errorLabel, resendLink, timerLabel);
         card.setAlignment(Pos.CENTER);
         card.setPadding(new Insets(20));
         card.setMaxWidth(400);
@@ -47,6 +89,45 @@ public class OTPVerificationView implements Screen {
         VBox root =new VBox(10, card);
         root.setAlignment(Pos.CENTER);
         root.setPadding(new Insets(20));
+
+        resendLink.setOnAction(_-> {
+            emailController.sendOTpEmail();
+            resendLink.setDisable(true);
+            timeLeft.set(RESEND_DELAY);
+            timeline.playFromStart();
+        });
+
+        confirmBtn.setOnAction(_-> {
+            otpField.getChildren().forEach(node -> node.getStyleClass().remove("input-error"));
+            errorLabel.setVisible(false);
+
+            String otp = otpField.getOTP();
+            VerificationStatus status = verificationController.verify(otp);
+
+            switch (status) {
+                case VERIFIED -> {
+                    DashboardView dashboardView = new DashboardView();
+                    SessionManager.currentSession.switchScreen(dashboardView);
+                    dashboardView.show((Stage) root.getScene().getWindow());
+                }
+
+                case EMPTY_FIELD -> {
+                    otpField.style("input-error");
+                    errorLabel.setText("Please fill in otp code field");
+                    errorLabel.setVisible(true);
+                    otpField.clear();
+                    otpField.getChildren().getFirst().requestFocus();
+                }
+
+                case INVALID_OTP -> {
+                    otpField.style("input-error");
+                    errorLabel.setText("The code you have entered is either invalid or expired");
+                    errorLabel.setVisible(true);
+                    otpField.clear();
+                    otpField.getChildren().getFirst().requestFocus();
+                }
+            }
+        });
 
         return root;
     }

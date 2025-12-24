@@ -15,4 +15,7 @@ public class OTP {
     public boolean isValid() { return !isExpired() && !used; }
 
     public void markUsed() { this.used = true; }
+
+    @Override
+    public String toString() { return code; }
 }
