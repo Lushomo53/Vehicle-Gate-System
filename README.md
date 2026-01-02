@@ -1,5 +1,7 @@
 Vehicle Gate System
 
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+
 A comprehensive Java desktop application designed to manage and log vehicle entry and exit transactions at institutional gates, such as corporate offices, university campuses, or secure facilities.
 
 Table of Contents
@@ -141,9 +143,9 @@ Contributions to improve the Vehicle Gate System are welcome. If you would like 
 
 Please ensure any code contributions follow the existing project style and conventions.
 
-License
+## License
 
-This project is currently without an explicit open-source license. To allow clear permissions for others to use, modify, and distribute your software, it is recommended to add a license file (e.g., LICENSE). Common choices for Java projects include the MIT License or the Apache License 2.0.
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file in the repository root for the full text.
 
 Future Enhancements
 
