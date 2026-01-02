@@ -11,6 +11,7 @@ public class FileHandler {
     public static void exportLogsToCSV(String filename, List<EntryLog> logs) throws IOException {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(filename, false))) {
             writer.write("Car Name,Model,LicensePlate,Owner,Entry Time,Exit Time,Status");
+            writer.newLine();
             for (EntryLog log : logs) {
                 writer.write(
                         log.getCarName()
