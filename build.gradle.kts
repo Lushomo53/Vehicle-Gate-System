@@ -4,7 +4,7 @@ plugins {
     id("org.openjfx.javafxplugin") version "0.0.14"
 }
 
-group = "org.example"
+group = "org.gatesystem"
 version = "1.0-SNAPSHOT"
 
 val javaVersion = 23
@@ -12,7 +12,7 @@ val javafxVersion = "24"
 val mysqlVersion = "9.3.0"
 
 application {
-    mainClass.set("org.example.Main")
+    mainClass.set("org.gatesystem.Main")
 }
 
 repositories {
